@@ -26,7 +26,7 @@
                 <td>{{$projectObj->id}}</td>
                 <td> {{$projectObj->name}}</td>
                 <td>{{$projectObj->description}}</td>
-                <td><a href="{{action('TaskController@tasks',$projectObj->id)}}"
+                <td><a href="{{action('TaskController@projtask',$projectObj->id)}}"
                        class="btn">{{count($projectObj->tasks)}}</a></td>
 
 
