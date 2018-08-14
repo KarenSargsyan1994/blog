@@ -37,10 +37,10 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>email</th>
+            <th>Email</th>
             <th>Projects</th>
             <th>Tasks</th>
-            <th>edit</th>
+            <th>Edit</th>
             <th colspan="2">Delate</th>
         </tr>
         </thead>
@@ -49,16 +49,19 @@
         @foreach($userArr as $userObj)
             <tr>
                 <td>{{$userObj->id}}</td>
-                <td>{{$userObj->name}}</td>
-                <td>{{$userObj->email}}</td>
                 <td><a href="{{action('ProjectController@projects',$userObj->id)}}"
-                       class="btn">{{count($userObj->projects)}}
-                    </a></td>
+                       class="btn">{{$userObj->name}} </a></td>
+                <td>{{$userObj->email}}</td>
+                <td>
+                    {{count($userObj->projects)}}
+                </td>
                 <td><a href="{{action('TaskController@tasks',$userObj->id)}}" class="btn">{{count($userObj->tasks)}}</a>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-warning btn-lg" data-toggle="modal" data-target="#edit"
-                            >Edit
+                    <button type="button" data-userid="{{$userObj->id}}" data-name="{{$userObj->name}}"
+                            data-email="{{$userObj->email}}" class="btn btn-warning btn-lg" data-toggle="modal"
+                            data-target="#edit"
+                    >Edit
                     </button>
 
 
@@ -88,42 +91,46 @@
 
 
 
-        <div class="modal" tabindex="-1" role="dialog" id="edit">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="alert alert-danger" style="display:none"></div>
-                    <div class="modal-header">
+    <div class="modal" tabindex="-1" role="dialog" id="edit">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="alert alert-danger" style="display:none"></div>
+                <div class="modal-header">
 
-                        <h5 class="modal-title">Edit User</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form method="POST">
+                    <h5 class="modal-title">Edit User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form role="form">
+
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="modal-body">
-
+                        <input type="hidden" name="user_id" id="user_id" value="">
                         <div class="row">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label for="name">Name:</label>
                                 <input type="text" class="form-control" name="name" id="name">
+                                <small class="text-danger">{{ $errors->first('name') }}</small>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label for="mail">E-mail:</label>
-                                <input type="text" class="form-control" name="mail" id="mail">
+                                <input type="text" class="form-control" name="email" id="email">
+                                <small class="text-danger">{{ $errors->first('email') }}</small>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button class="btn btn-success" id="ajaxSubmit">Save changes</button>
-                        </div>
+                    </div>
 
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
 
 
 

@@ -68,6 +68,17 @@ class UserController
         return redirect('index')->with('success', 'user updated');
     }
 
+    public function editUser(Request $request)
+    {
+
+        $data = user::findOrFail ( $request->id );
+        $data->name = $request->name;
+        $data->email= $request->email;
+        $data->save ();
+        return response ()->json ( $data );
+
+    }
+
     public function destroy($id)
     {
         $userObj = User::findOrFail($id);

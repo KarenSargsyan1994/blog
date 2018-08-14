@@ -30,11 +30,14 @@ Route::get('dashboard', function () {
     return redirect('index');
 });
 Route::resource('users', 'UserController');
+Route::resource('projects', 'ProjectController');
+Route::resource('tasks', 'TaskController');
 
 Route::get('projects/{id}/info', 'ProjectController@projects');
 Route::get('tasks/{id}/info', 'TaskController@projtask');
 
 Route::get('users/{id}/tasks', 'TaskController@tasks');
+Route::post('/editUser', 'UserController@editUser');
 
 
 
