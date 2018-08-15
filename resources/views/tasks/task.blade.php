@@ -16,6 +16,7 @@
             <th>description</th>
 
 
+
         </tr>
         </thead>
         <tbody>
@@ -37,5 +38,7 @@
     <div class="col-md-3 m-auto">
         <a href="{{action('UserController@index')}}" class="btn btn-warning ">Prev</a>
     </div>
+
+
 
 @endsection

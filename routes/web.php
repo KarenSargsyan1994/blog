@@ -37,7 +37,10 @@ Route::get('projects/{id}/info', 'ProjectController@projects');
 Route::get('tasks/{id}/info', 'TaskController@projtask');
 
 Route::get('users/{id}/tasks', 'TaskController@tasks');
-Route::post('/editUser', 'UserController@editUser');
+Route::post('/update', 'EditController@update');
+Route::get('/edit', 'EditController@edit');
+Route::get('/editProj', 'EditController@editProj');
+Route::post('/updateProj', 'EditController@updateProj');
 
 
 

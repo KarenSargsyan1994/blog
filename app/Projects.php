@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,7 +10,7 @@ class Projects extends Model
     use Notifiable;
 
 
-    protected $fillable = ['name ', 'Description'];
+    protected $fillable = ['name ', 'description'];
 
     public function user()
     {

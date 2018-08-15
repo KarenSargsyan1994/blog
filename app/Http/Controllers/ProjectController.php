@@ -24,13 +24,14 @@ class ProjectController
 
         return view('projects.projects', ['projectArr' => $projectArr]);
     }
+
     public function update(Request $request)
     {
         request()->validate([
             'name' => 'required',
             'description' => 'required',
         ]);
-       Projects::findOrFail($request->project_id)->update($request->all());
+        Projects::findOrFail($request->project_id)->update($request->all());
         return back();
 
     }

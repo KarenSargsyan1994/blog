@@ -31,8 +31,9 @@
                 <td>{{$projectObj->description}}</td>
                 <td>{{count($projectObj->tasks)}}</td>
 
-                <td><button type="button" data-projectid="{{$projectObj->id}}" data-name="{{$projectObj->name}}"
-                            data-des="{{$projectObj->description}}" class="btn btn-warning btn-lg" data-toggle="modal"
+                <td>
+                    <button type="button" data-projectid="{{$projectObj->id}}"
+                            class="btn btn-warning " data-toggle="modal"
                             data-target="#editProj">Edit
                     </button>
                 </td>
@@ -49,45 +50,92 @@
 
 
 
-    <div class="modal" tabindex="-1" role="dialog" id="editProj">
-        <div class="modal-dialog" role="document">
+    <div class="modal" id="editProj">
+        <div class="modal-dialog">
             <div class="modal-content">
-                <div class="alert alert-danger" style="display:none"></div>
                 <div class="modal-header">
-
-                    <h5 class="modal-title">Edit User</h5>
+                    <h5 class="modal-title">Edit Project</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{route('projects.update','edit')}}" method="post">
-                    {{method_field('patch')}}
-                    {{csrf_field()}}
-                    <div class="modal-body">
+
+                <div class="modal-body">
+                    <form class="projForm">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
                         <input type="hidden" name="project_id" id="project_id" value="">
+                        <input type="hidden" name="user_id" id="user_id" value="">
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="name">Name:</label>
                                 <input type="text" class="form-control" name="name" id="name">
-                                <small class="text-danger">{{ $errors->first('name') }}</small>
+                                <small name="name" class="text-danger"></small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="mail">Description:</label>
-                               <input type="text"  class="form-control" name="description" id="des">
-                                <small class="text-danger">{{ $errors->first('description') }}</small>
+                                <input type="text" class="form-control" name="description" id="des">
+                                <small name="description" class="text-danger"></small>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button class="btn btn-success" id="ajaxSubmit">Save changes</button>
-                    </div>
 
-                </form>
+                        <div class="modal-footer">
+                            <button class="btn btn-success" id="projSubm">Save changes</button>
+                        </div>
+
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
+
+
+<script>
+    $(document).ready(function () {
+    $('#editProj').on('shown.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var projectId = button.data('projectid');
+        $.ajax({
+            type: 'get',
+            url: '/editProj',
+            data: {id: projectId},
+            success: function (data) {
+                $('.modal-body #name').val(data['name']);
+                $('.modal-body #des').val(data['description']);
+                $('.modal-body #project_id').val(data['id']);
+                $('.modal-body #user_id').val(data['user_id']);
+
+            }
+        });
+
+    });
+
+    $('#projSubm').on('click', function (e) {
+        e.preventDefault();
+        console.log($('form.projForm').serialize())
+        $.ajax({
+            type: 'post',
+            url: '/updateProj',
+            data: $('form.projForm').serialize(),
+
+            success: function (data) {
+                if ($.isEmptyObject(data.errors)) {
+
+                    location.reload();
+                }
+                else {
+                    $('.text-danger').each(function () {
+                        $(this).text(data.errors[$(this).attr('name')])
+                    });
+
+                }
+            }
+        })
+
+    })
+    });
+</script>
 @endsection

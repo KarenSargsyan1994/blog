@@ -50,12 +50,12 @@ class UserController
     }
 
 
-    public function edit($id)
-    {
-        $userObj = User::findOrFail($id);
-        return view('users.edit', compact('userObj', 'id'));
-
-    }
+//    public function edit(Request $request)
+//    {
+//        $userObj = User::findOrFail($request->id);
+//        return view('users.edit', compact('userObj', 'id'));
+//
+//    }
 
 
     public function update(Request $request, $id)
@@ -68,21 +68,21 @@ class UserController
         return redirect('index')->with('success', 'user updated');
     }
 
-    public function editUser(Request $request)
-    {
-
-        $data = user::findOrFail ( $request->id );
-        $data->name = $request->name;
-        $data->email= $request->email;
-        $data->save ();
-        return response ()->json ( $data );
-
-    }
+//    public function editUser(Request $request)
+//    {
+//
+//        $data = user::findOrFail ( $request->id );
+//        $data->name = $request->name;
+//        $data->email= $request->email;
+//        $data->save ();
+//        return response ()->json ( $data );
+//
+//    }
 
     public function destroy($id)
     {
         $userObj = User::findOrFail($id);
         $userObj->delete();
-        return redirect('users')->with('success', 'Product has been  deleted');
+        return redirect('users')->with('success', 'User has been  deleted');
     }
 }

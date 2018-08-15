@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <meta name="_token" content="{{ csrf_token() }}"/>
 </head>
 <body>
@@ -17,75 +18,6 @@
     @yield('content')
 
 </div>
-<script>
-    $('#edit').on('shown.bs.modal', function (event) {
-
-
-        var button = $(event.relatedTarget);
-        var name = button.data('name');
-        var email = button.data('email');
-        var userId = button.data('userid');
-
-        var modal = $(this);
-        modal.find('.modal-body #name').val(name);
-        modal.find('.modal-body #email').val(email);
-        modal.find('.modal-body #user_id').val(userId);
-
-
-    });
-
-    $('#ajaxSubmit').click( function () {
-console.log('kjskdf');
-        $.ajax({
-            type: 'post',
-            url: '/editUser',
-            data: {
-                '_token':$('input[name=_token]').val(),
-                'id': $("#user_id").val(),
-                'email': $('#email').val(),
-                'name':$('#name').val(),
-
-            },
-            success:function (data) {
-
-            }
-        })
-
-
-    })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //    $('#editProj').on('shown.bs.modal', function (event) {
-    //
-    //
-    //        var button = $(event.relatedTarget);
-    //        var name = button.data('name');
-    //        var des = button.data('des');
-    //        var projectId = button.data('projectid');
-    //
-    //        var modal = $(this);
-    //        modal.find('.modal-body #name').val(name);
-    //        modal.find('.modal-body #des').val(des);
-    //        modal.find('.modal-body #project_id').val(projectId);
-    //
-    //    })
-
-
-</script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"

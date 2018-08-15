@@ -58,8 +58,8 @@
                 <td><a href="{{action('TaskController@tasks',$userObj->id)}}" class="btn">{{count($userObj->tasks)}}</a>
                 </td>
                 <td>
-                    <button type="button" data-userid="{{$userObj->id}}" data-name="{{$userObj->name}}"
-                            data-email="{{$userObj->email}}" class="btn btn-warning btn-lg" data-toggle="modal"
+                    <button type="button" data-userid="{{$userObj->id}}"
+                            class="btn btn-warning" data-toggle="modal"
                             data-target="#edit"
                     >Edit
                     </button>
@@ -91,47 +91,94 @@
 
 
 
-    <div class="modal" tabindex="-1" role="dialog" id="edit">
-        <div class="modal-dialog" role="document">
+    <div class="modal" id="edit">
+        <div class="modal-dialog">
             <div class="modal-content">
-                <div class="alert alert-danger" style="display:none"></div>
                 <div class="modal-header">
-
                     <h5 class="modal-title">Edit User</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form role="form">
 
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <div class="modal-body">
+
+                <div class="modal-body">
+                    <form class="content">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="user_id" id="user_id" value="">
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="name">Name:</label>
                                 <input type="text" class="form-control" name="name" id="name">
-                                <small class="text-danger">{{ $errors->first('name') }}</small>
+                                <small name='name' class="text-danger "></small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="mail">E-mail:</label>
                                 <input type="text" class="form-control" name="email" id="email">
-                                <small class="text-danger">{{ $errors->first('email') }}</small>
+                                <small name="email" class="text-danger "></small>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button class="btn btn-success" id="ajaxSubmit">Save changes</button>
-                    </div>
 
-                </form>
+                        <div class="modal-footer">
+
+                            <button class="btn btn-success" id="ajaxSubmit">Save changes</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
+    <script>
+        $(document).ready(function () {
+
+            $('#edit').on('shown.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var userId = button.data('userid');
+                $.ajax({
+                    type: 'get',
+                    url: '/edit',
+                    data: {id: userId},
+                    success: function (data) {
+                        $('.modal-body #name').val(data['name']);
+                        $('.modal-body #email').val(data['email']);
+                        $('.modal-body #user_id').val(data['id']);
+
+
+                    }
+                });
+            });
+
+            $('#ajaxSubmit').on('click', function (e) {
+                e.preventDefault();
+                var formData = $('form.content').serialize();
+
+
+                $.ajax({
+                    type: 'post',
+                    url: '/update',
+                    data: formData,
+                    success: function (data) {
+                        if ($.isEmptyObject(data.errors)) {
+                            location.reload();
+                        }
+
+                        else {
+                            $('.text-danger').each(function () {
+                                $(this).text(data.errors[$(this).attr('name')])
+                            });
+
+                        }
+                    }
+                })
+
+            });
+
+
+        });
+    </script>
 
 
 
