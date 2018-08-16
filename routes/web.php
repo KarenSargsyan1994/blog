@@ -22,6 +22,7 @@ Route::get('/', function () {
 Route::post('post', 'UserController@update');
 Route::get('/index', 'UserController@index');
 
+Route::post('search','UserController@search');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -35,22 +36,15 @@ Route::resource('tasks', 'TaskController');
 
 Route::get('projects/{id}/info', 'ProjectController@projects');
 Route::get('tasks/{id}/info', 'TaskController@projtask');
-
 Route::get('users/{id}/tasks', 'TaskController@tasks');
+
 Route::post('/update', 'EditController@update');
 Route::get('/edit', 'EditController@edit');
+
 Route::get('/editProj', 'EditController@editProj');
 Route::post('/updateProj', 'EditController@updateProj');
 
+Route::get('/editTask', 'EditController@editTask');
+Route::post('/updateTask', 'EditController@updateTask');
 
 
-
-
-//
-//Route::any ( '/index', function () {
-//    $q = Input::get ( 'search' );
-//    $users = User::where ( 'name', 'LIKE', '%' . $q . '%' )->orWhere ( 'email', 'LIKE', '%' . $q . '%' )->get ();
-//    if (count ( $users ) > 0)
-//        return view ( 'index' )->withDetails ( $users )->withQuery ( $q );
-//
-//} );

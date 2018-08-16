@@ -10,29 +10,58 @@
         </div><br/>
     @endif
 
-    <div class="row mb-4 ">
-        <form action="/users" class="col-md-12" method="get">
 
-            <div class="col-md-4 mt-3 p-0 input-group">
-                <input type="text" class="form-control" name="search"
-                       placeholder="Search users">
-                </button>
-                </span>
+
+
+
+
+    <div class="container  border border-info p-0">
+        <form action="search" method="post">
+            {{csrf_field()}}
+            <div class="form-group m-0">
+                <div class="input-group">
+                    <div class="col-3 p-0 mr-2">
+                        <input type="text" class="form-control" name="search"
+                               placeholder="Search users"></div>
+
+
+                    <select  name="select" class="btn btn-info col-2 " value="">
+                        <option value="name"> name</option>
+                        <option value="email">email</option>
+                    </select>
+                    <div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
+                        <label class="btn btn-success active">
+
+                            <input type="radio" name="sort" id="asc" value="asc" autocomplete="off" checked> ASC
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="sort" id="desc" value="desc" autocomplete="off"> DESC
+                        </label>
+                    </div>
+
+                    <span class=" col-1 btn-success text-md-center p-0">Max</span>
+                    <div class="col-1 p-0 ">
+                        <input type="text" class="form-control" id="max" name="max" placeholder="max 10">
+                    </div>
+                    <span class=" col-1 btn-success text-md-center p-0">Min</span>
+                    <div class="col-1 p-0 mr-2">
+                        <input type="text" class="form-control" id="min" name="min" placeholder="min 4">
+                    </div>
+
+                    <button type="submit" id="bt" class="btn btn-primary col-1">Search</button>
+
+                </div>
             </div>
-
-            <div class=" col-md-3 mt-3 p-0 ">
-                <input type="text" class="form-control" name="counto"
-                       placeholder="projects count">
-                <span class="mt-3">
-            <button type="submit" class="btn mt-3 btn-primary">
-                Search
-            </button>
-        </span>
-            </div>
-
         </form>
     </div>
-    <table class="table table-striped mt-5">
+
+
+
+
+
+
+
+    <table class="table table-bordered table-hover ">
         <thead>
         <tr>
             <th>ID</th>
@@ -69,11 +98,12 @@
 
 
                 <td>
-                    <form action="{{action('UserController@destroy', $userObj->id)}}" method="post">
-                        {{csrf_field()}}
-                        <input name="_method" type="hidden" value="DELETE">
-                        <button class="btn btn-danger" type="submit">Delete</button>
-                    </form>
+                    {{--<form action="{{action('UserController@destroy', $userObj->id)}}" method="post">--}}
+                    {{--{{csrf_field()}}--}}
+                    {{--<input name="_method" type="hidden" value="DELETE">--}}
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteUser" type="button">Delete
+                    </button>
+                    {{--</form>--}}
                 </td>
             </tr>
         @endforeach
@@ -81,7 +111,7 @@
     </table>
 
 
-
+    {{ $userArr->links()}}
 
 
 
@@ -131,6 +161,29 @@
         </div>
     </div>
 
+
+
+
+    <div id="deleteUser" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to delete this user</p>
+                </div>
+                <div class="modal-footer text-md-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         $(document).ready(function () {
 
@@ -175,13 +228,9 @@
                 })
 
             });
-
+$('#bt')
 
         });
     </script>
-
-
-
-
 
 @endsection

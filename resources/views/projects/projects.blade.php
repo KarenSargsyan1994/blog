@@ -93,49 +93,48 @@
 
 
 
-<script>
-    $(document).ready(function () {
-    $('#editProj').on('shown.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var projectId = button.data('projectid');
-        $.ajax({
-            type: 'get',
-            url: '/editProj',
-            data: {id: projectId},
-            success: function (data) {
-                $('.modal-body #name').val(data['name']);
-                $('.modal-body #des').val(data['description']);
-                $('.modal-body #project_id').val(data['id']);
-                $('.modal-body #user_id').val(data['user_id']);
+    <script>
+        $(document).ready(function () {
+            $('#editProj').on('shown.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var projectId = button.data('projectid');
+                $.ajax({
+                    type: 'get',
+                    url: '/editProj',
+                    data: {id: projectId},
+                    success: function (data) {
+                        $('.modal-body #name').val(data['name']);
+                        $('.modal-body #des').val(data['description']);
+                        $('.modal-body #project_id').val(data['id']);
+                        $('.modal-body #user_id').val(data['user_id']);
 
-            }
+                    }
+                });
+
+            });
+
+            $('#projSubm').on('click', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'post',
+                    url: '/updateProj',
+                    data: $('form.projForm').serialize(),
+
+                    success: function (data) {
+                        if ($.isEmptyObject(data.errors)) {
+
+                            location.reload();
+                        }
+                        else {
+                            $('.text-danger').each(function () {
+                                $(this).text(data.errors[$(this).attr('name')])
+                            });
+
+                        }
+                    }
+                })
+
+            })
         });
-
-    });
-
-    $('#projSubm').on('click', function (e) {
-        e.preventDefault();
-        console.log($('form.projForm').serialize())
-        $.ajax({
-            type: 'post',
-            url: '/updateProj',
-            data: $('form.projForm').serialize(),
-
-            success: function (data) {
-                if ($.isEmptyObject(data.errors)) {
-
-                    location.reload();
-                }
-                else {
-                    $('.text-danger').each(function () {
-                        $(this).text(data.errors[$(this).attr('name')])
-                    });
-
-                }
-            }
-        })
-
-    })
-    });
-</script>
+    </script>
 @endsection

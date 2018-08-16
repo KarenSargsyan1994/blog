@@ -10,7 +10,7 @@ class Projects extends Model
     use Notifiable;
 
 
-    protected $fillable = ['name ', 'description'];
+    protected $fillable = ['name', 'description'];
 
     public function user()
     {

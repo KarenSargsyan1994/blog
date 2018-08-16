@@ -7,7 +7,7 @@
  */
 
 namespace App\Http\Controllers;
-
+use Illuminate\Pagination\Paginator;
 use App\Projects;
 use App\Tasks;
 use Illuminate\Http\Request;
@@ -18,21 +18,56 @@ class UserController
 {
     public function index()
     {
-        $search = request('search');
 
-        $userArr = User::where('users.name', 'LIKE', '%' . $search . '%')
-            ->orWhere('users.email', 'LIKE', '%' . $search . '%')
-            ->groupBy('users.id')
-            ->with('projects')
+        $name = request()->select;
+
+
+        $userArr = User::with('projects')
             ->with('tasks')
-            ->paginate(8);
-
+            ->paginate(7);
 
         return view('users.index', [
             'userArr' => $userArr
         ]);
     }
 
+    public function search(Request $request){
+
+
+     $validator = \Validator::make($request->all(), [
+        'max' => 'required|regex:/[1-9]/u',
+
+    ]);
+        if($validator->fails()){
+            $max=0;
+
+        }else{
+            $max = $request->max;
+
+        }
+        $search = $request->search;
+        $select = $request->select;
+        $sort = $request->sort;
+
+
+        $userArr = User::where('users.name', 'LIKE', '%' . $search . '%')
+            ->orWhere('users.email', 'LIKE', '%' . $search . '%')->withCount('projects')->having('projects_count', '>', $max)
+            ->orderBy($select, $sort)
+            ->paginate(5);
+
+
+        return view('users.index', [
+            'userArr' => $userArr
+        ]);
+
+
+//        $arr = User::select('users.*')->where('users.name', 'LIKE', '%kar%')->with('projects')->get();
+//        dd(count($arr[0]->projects));
+//        return view('users.index', [
+//            'userArr' => $arr
+//        ]);
+
+    }
 
     protected function create()
     {
@@ -48,36 +83,6 @@ class UserController
         User::create($request->all());
         return back()->with('success', 'users  added');
     }
-
-
-//    public function edit(Request $request)
-//    {
-//        $userObj = User::findOrFail($request->id);
-//        return view('users.edit', compact('userObj', 'id'));
-//
-//    }
-
-
-    public function update(Request $request, $id)
-    {
-        request()->validate([
-            'name' => 'required',
-            'email' => 'required|email|regex:/(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$)/u',
-        ]);
-        User::findOrFail($id)->update($request->all());
-        return redirect('index')->with('success', 'user updated');
-    }
-
-//    public function editUser(Request $request)
-//    {
-//
-//        $data = user::findOrFail ( $request->id );
-//        $data->name = $request->name;
-//        $data->email= $request->email;
-//        $data->save ();
-//        return response ()->json ( $data );
-//
-//    }
 
     public function destroy($id)
     {
