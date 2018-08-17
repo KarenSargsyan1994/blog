@@ -17,28 +17,27 @@ use PHPUnit\Framework\Constraint\Count;
 class TaskController
 {
 
-    public function projtask($id)
+    public function projectTasks($id)
     {
         $taskArr = Tasks::where('tasks.project_id', '=', $id)->paginate(5);
 
 
-        return view('tasks.task', ['taskArr' => $taskArr]);
+        return view('tasks/task', ['taskArr' => $taskArr]);
     }
 
-    public function tasks($id)
+    public function userTasks($id)
     {
         $taskArr = Tasks::where('tasks.user_id', '=', $id)->paginate(5);
 
-        return view('tasks.task', ['taskArr' => $taskArr]);
+        return view('tasks/task', ['taskArr' => $taskArr]);
     }
 
     public function edit()
     {
 
-        $id = $_GET['id'];
-        $TaskDate = Tasks::findOrFail($id);
-        return $TaskDate;
-    }
+        $id = request()->id;
+        $taskObj = Tasks::findOrFail($id);
+        return $taskObj;}
 
     public function update(Request $request)
     {

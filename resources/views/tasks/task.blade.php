@@ -95,7 +95,7 @@
                 var taskId = button.data('taskid');
                 $.ajax({
                     type: 'get',
-                    url: '/editTask',
+                    url: '/task/edit',
                     data: {id: taskId},
                     success: function (data) {
                         $('.modal-body #name').val(data['name']);
@@ -111,7 +111,7 @@
                 e.preventDefault();
                 $.ajax({
                     type: 'post',
-                    url: '/updateTask',
+                    url: '/task/update',
                     data: $('form.taskForm').serialize(),
 
                     success: function (data) {

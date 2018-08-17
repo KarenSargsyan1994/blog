@@ -31,18 +31,18 @@ Route::resource('users', 'UserController');
 Route::resource('projects', 'ProjectController');
 Route::resource('tasks', 'TaskController');
 
-Route::get('projects/{id}/info', 'ProjectController@projects');
-Route::get('tasks/{id}/info', 'TaskController@projtask');
-Route::get('users/{id}/tasks', 'TaskController@tasks');
+Route::get('projects/{id}/projects', 'ProjectController@projects');
+Route::get('task/{id}', 'TaskController@projectTasks');
+Route::get('users/{id}/task', 'TaskController@userTasks');
 
-Route::post('/updateUser', 'UserController@update');
-Route::get('/editUser', 'UserController@edit');
+Route::post('/user/update', 'UserController@update');
+Route::get('/user/edit', 'UserController@edit');
 
-Route::post('/updateProj', 'ProjectController@update');
-Route::get('/editProj', 'ProjectController@edit');
+Route::post('/project/update', 'ProjectController@update');
+Route::get('/project/edit', 'ProjectController@edit');
 
 
-Route::get('/editTask', 'TaskController@edit');
-Route::post('/updateTask', 'TaskController@update');
+Route::get('/task/edit', 'TaskController@edit');
+Route::post('/task/update', 'TaskController@update');
 
 

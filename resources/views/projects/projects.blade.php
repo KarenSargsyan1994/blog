@@ -25,7 +25,7 @@
         @foreach($projectArr as $projectObj)
             <tr>
                 <td>{{$projectObj->id}}</td>
-                <td><a href="{{action('TaskController@projtask',$projectObj->id)}}"
+                <td><a href="{{action('TaskController@projectTasks',$projectObj->id)}}"
                        class="btn">{{$projectObj->name}}</a>
                 </td>
                 <td>{{$projectObj->description}}</td>
@@ -100,7 +100,7 @@
                 var projectId = button.data('projectid');
                 $.ajax({
                     type: 'get',
-                    url: '/editProj',
+                    url: '/project/edit',
                     data: {id: projectId},
                     success: function (data) {
                         $('.modal-body #name').val(data['name']);
@@ -117,7 +117,7 @@
                 e.preventDefault();
                 $.ajax({
                     type: 'post',
-                    url: '/updateProj',
+                    url: '/project/update',
                     data: $('form.projForm').serialize(),
 
                     success: function (data) {

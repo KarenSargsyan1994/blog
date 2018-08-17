@@ -24,45 +24,45 @@ class UserController
     {
 
         $validator = \Validator::make(request()->all(), [
-            'max' => 'required|regex:/^[0-9]+$/',
-            'min' => 'required|regex:/^[0-9]+$/'
+            'moreThan' => 'required|regex:/^[0-9]+$/',
+            'lessThan' => 'required|regex:/^[0-9]+$/'
         ]);
         if ($validator->fails()) {
             $errors_list = $validator->errors()->messages();
-            if (!empty($errors_list['max']) && !empty($errors_list['min'])) {
-                $max = 1;
-                $min = 10;
-            } elseif (!empty($errors_list['max'])) {
-                $max = 1;
-                $min = request()->min;
+            if (!empty($errors_list['moreThan']) && !empty($errors_list['lessThan'])) {
+                $moreThan = -1;
+                $lessThan = 10;
+            } elseif (!empty($errors_list['moreThan'])) {
+                $moreThan = 1;
+                $lessThan = request()->lessThan;
 
             } else {
-                $min = 10;
-                $max = request()->max;
+                $moreThan = 10;
+                $lessThan = request()->moreThan;
             }
 
         } else {
-            $min = request()->min;
-            $max = request()->max;
+            $lessThan = request()->lessThan;
+            $moreThan = request()->moreThan;
         }
 
         if (request()->select == null) {
-            $select = 'name';
+            $selectName = 'name';
         } else {
-            $select = request()->select;
+            $selectName = request()->select;
         }
 
-        $search = request()->search;
+        $searchName = request()->search;
         $sort = request()->sort;
-        $searchArr = array('search' => $search, 'sort' => $sort, 'min' => $min, 'max' => $max, 'select' => $select);
+        $searchArr = array('search' => $searchName, 'sort' => $sort, 'lessThan' => $lessThan, 'moreThan' => $moreThan, 'select' => $selectName);
 
         $query = User::with('projects')
-            ->with('tasks')->where('users.name', 'LIKE', '%' . $search . '%')
-            ->orWhere('users.email', 'LIKE', '%' . $search . '%')
+            ->with('tasks')->where('users.name', 'LIKE', '%' . $searchName . '%')
+            ->orWhere('users.email', 'LIKE', '%' . $searchName . '%')
             ->groupBy('users.id')->withCount('projects')
-            ->having('projects_count', '>', $max)
-            ->having('projects_count', '<', $min)
-            ->orderBy($select, $sort)->get();
+            ->having('projects_count', '>', $moreThan)
+            ->having('projects_count', '<', $lessThan)
+            ->orderBy($selectName, $sort)->get();
         $userArr = $this->paginate($query)->setPath('http://blog-test.loc/index');
 
         return view('users.index', [

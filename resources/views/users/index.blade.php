@@ -38,12 +38,12 @@
 
                     <span class=" col-1 btn-success  btn-group-vertical p-0"> <p class="m-auto">More than</p></span>
                     <div class="col-1 p-0 ">
-                        <input type="text" class="form-control" id="max" name="max" value="{{$searchArr['max']}}">
+                        <input type="text" class="form-control" id="moreThan" name="moreThan" value="{{$searchArr['moreThan']}}">
                     </div>
                     <span class=" col-1 btn-success  btn-group-vertical text-md-center p-0"><p
                                 class="m-auto">Less than</p></span>
                     <div class="col-1 p-0 mr-2">
-                        <input type="text" class="form-control" id="min" name="min" value="{{$searchArr['min']}}">
+                        <input type="text" class="form-control" id="lessThan" name="lessThan" value="{{$searchArr['lessThan']}}">
                     </div>
 
                     <button type="submit" id="bt" class="btn btn-primary col-1">Search</button>
@@ -84,7 +84,7 @@
                 <td>
                     {{count($userObj->projects)}}
                 </td>
-                <td><a href="{{action('TaskController@tasks',$userObj->id)}}" class="btn">{{count($userObj->tasks)}}</a>
+                <td><a href="{{action('TaskController@userTasks',$userObj->id)}}" class="btn">{{count($userObj->tasks)}}</a>
                 </td>
                 <td>
                     <button type="button" data-userid="{{$userObj->id}}"
@@ -175,7 +175,7 @@
                 var userId = button.data('userid');
                 $.ajax({
                     type: 'get',
-                    url: 'editUser',
+                    url: 'user/edit',
                     data: {id: userId},
                     success: function (data) {
                         $('.modal-body #name').val(data['name']);
@@ -194,7 +194,7 @@
 
                 $.ajax({
                     type: 'post',
-                    url: 'updateUser',
+                    url: 'user/update',
                     data: formData,
                     success: function (data) {
                         if ($.isEmptyObject(data.errors)) {
