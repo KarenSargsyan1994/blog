@@ -25,16 +25,33 @@ class ProjectController
         return view('projects.projects', ['projectArr' => $projectArr]);
     }
 
+    public function edit()
+    {
+
+        $id = $_GET['id'];
+        $ProjectDate = Projects::findOrFail($id);
+        return $ProjectDate;
+    }
+
     public function update(Request $request)
     {
-        request()->validate([
+        $validator = \Validator::make($request->all(), [
             'name' => 'required',
             'description' => 'required',
         ]);
-        Projects::findOrFail($request->project_id)->update($request->all());
-        return back();
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
+        } else {
+            $projectObj = Projects::findOrFail($request->get('project_id'));
+
+            $projectObj->update($request->only([
+                'name', 'description'
+            ]));
+
+            return response()->json(['success' => ' is successfully updated']);
+        }
+
 
     }
-
 
 }

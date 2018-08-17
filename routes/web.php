@@ -21,10 +21,7 @@ Route::get('/', function () {
 
 Route::post('post', 'UserController@update');
 Route::get('/index', 'UserController@index');
-
-Route::post('search','UserController@search');
 Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('dashboard', function () {
@@ -38,13 +35,14 @@ Route::get('projects/{id}/info', 'ProjectController@projects');
 Route::get('tasks/{id}/info', 'TaskController@projtask');
 Route::get('users/{id}/tasks', 'TaskController@tasks');
 
-Route::post('/update', 'EditController@update');
-Route::get('/edit', 'EditController@edit');
+Route::post('/updateUser', 'UserController@update');
+Route::get('/editUser', 'UserController@edit');
 
-Route::get('/editProj', 'EditController@editProj');
-Route::post('/updateProj', 'EditController@updateProj');
+Route::post('/updateProj', 'ProjectController@update');
+Route::get('/editProj', 'ProjectController@edit');
 
-Route::get('/editTask', 'EditController@editTask');
-Route::post('/updateTask', 'EditController@updateTask');
+
+Route::get('/editTask', 'TaskController@edit');
+Route::post('/updateTask', 'TaskController@update');
 
 

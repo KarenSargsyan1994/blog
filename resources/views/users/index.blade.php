@@ -9,43 +9,41 @@
             <p>{{ \Session::get('success') }}</p>
         </div><br/>
     @endif
+    {{--@php dd($searchArr); @endphp--}}
+    <div class="container  border border-default p-0">
+        <form action="/index" method="get">
 
-
-
-
-
-
-    <div class="container  border border-info p-0">
-        <form action="search" method="post">
-            {{csrf_field()}}
             <div class="form-group m-0">
                 <div class="input-group">
                     <div class="col-3 p-0 mr-2">
                         <input type="text" class="form-control" name="search"
-                               placeholder="Search users"></div>
+                               value="{{$searchArr['search']}}"></div>
 
 
-                    <select  name="select" class="btn btn-info col-2 " value="">
-                        <option value="name"> name</option>
-                        <option value="email">email</option>
+                    <select name="select" class="btn btn-info col-2 mr-2" value="">
+                        <option value="name" {{$searchArr['select']=='name'?'selected':''}}> name</option>
+                        <option value="email"{{$searchArr['select']=='email'?'selected':''}}>email</option>
                     </select>
                     <div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
-                        <label class="btn btn-success active">
+                        <label class="btn btn-dark active">
 
-                            <input type="radio" name="sort" id="asc" value="asc" autocomplete="off" checked> ASC
+                            <input type="radio" name="sort" id="asc" value="asc"
+                                   autocomplete="off" {{$searchArr['sort'] == 'asc' ? 'checked' : ''}}> ASC
                         </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="sort" id="desc" value="desc" autocomplete="off"> DESC
+                        <label class="btn btn-danger">
+                            <input type="radio" name="sort" id="desc" value="desc"
+                                   autocomplete="off" {{$searchArr['sort'] == 'desc' ? 'checked' : ''}}> DESC
                         </label>
                     </div>
 
-                    <span class=" col-1 btn-success text-md-center p-0">Max</span>
+                    <span class=" col-1 btn-success  btn-group-vertical p-0"> <p class="m-auto">More than</p></span>
                     <div class="col-1 p-0 ">
-                        <input type="text" class="form-control" id="max" name="max" placeholder="max 10">
+                        <input type="text" class="form-control" id="max" name="max" value="{{$searchArr['max']}}">
                     </div>
-                    <span class=" col-1 btn-success text-md-center p-0">Min</span>
+                    <span class=" col-1 btn-success  btn-group-vertical text-md-center p-0"><p
+                                class="m-auto">Less than</p></span>
                     <div class="col-1 p-0 mr-2">
-                        <input type="text" class="form-control" id="min" name="min" placeholder="min 4">
+                        <input type="text" class="form-control" id="min" name="min" value="{{$searchArr['min']}}">
                     </div>
 
                     <button type="submit" id="bt" class="btn btn-primary col-1">Search</button>
@@ -75,6 +73,8 @@
         </thead>
         <tbody>
         <br/>
+        {{--<@php dd($userArr) @endphp--}}
+
         @foreach($userArr as $userObj)
             <tr>
                 <td>{{$userObj->id}}</td>
@@ -98,12 +98,12 @@
 
 
                 <td>
-                    {{--<form action="{{action('UserController@destroy', $userObj->id)}}" method="post">--}}
-                    {{--{{csrf_field()}}--}}
-                    {{--<input name="_method" type="hidden" value="DELETE">--}}
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteUser" type="button">Delete
-                    </button>
-                    {{--</form>--}}
+                    <form action="{{action('UserController@destroy', $userObj->id)}}" method="post">
+                        {{csrf_field()}}
+                        <input name="_method" type="hidden" value="DELETE">
+                        <button class="btn btn-danger" type="submit">Delete
+                        </button>
+                    </form>
                 </td>
             </tr>
         @endforeach
@@ -111,7 +111,7 @@
     </table>
 
 
-    {{ $userArr->links()}}
+    {{ $userArr->appends(Request::except('page'))->links()}}
 
 
 
@@ -164,24 +164,7 @@
 
 
 
-    <div id="deleteUser" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Confirmation</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
-                </div>
-                <div class="modal-body">
-                    <p>Do you want to delete this user</p>
-                </div>
-                <div class="modal-footer text-md-center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
     <script>
@@ -192,7 +175,7 @@
                 var userId = button.data('userid');
                 $.ajax({
                     type: 'get',
-                    url: '/edit',
+                    url: 'editUser',
                     data: {id: userId},
                     success: function (data) {
                         $('.modal-body #name').val(data['name']);
@@ -211,7 +194,7 @@
 
                 $.ajax({
                     type: 'post',
-                    url: '/update',
+                    url: 'updateUser',
                     data: formData,
                     success: function (data) {
                         if ($.isEmptyObject(data.errors)) {
@@ -228,7 +211,7 @@
                 })
 
             });
-$('#bt')
+            $('#bt')
 
         });
     </script>

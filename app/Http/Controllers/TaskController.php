@@ -32,5 +32,32 @@ class TaskController
         return view('tasks.task', ['taskArr' => $taskArr]);
     }
 
+    public function edit()
+    {
 
+        $id = $_GET['id'];
+        $TaskDate = Tasks::findOrFail($id);
+        return $TaskDate;
+    }
+
+    public function update(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
+        } else {
+            $taskObj = Tasks::findOrFail($request->get('task_id'));
+
+            $taskObj->update($request->only([
+                'name', 'description'
+            ]));
+
+            return response()->json(['success' => ' is successfully updated']);
+        }
+
+
+    }
 }
