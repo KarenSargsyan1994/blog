@@ -22,13 +22,13 @@ class ProjectController
     {
         $projectArr = Projects::where('projects.user_id', '=', $id)->with('tasks')->paginate(5);
 
-        return view('projects/projects', ['projectArr' => $projectArr]);
+        return view('projects.projects', ['projectArr' => $projectArr]);
     }
 
     public function edit()
     {
 
-        $id = request()->id;
+        $id = request()->get('id');
         $projectObj = Projects::findOrFail($id);
         return $projectObj;
     }

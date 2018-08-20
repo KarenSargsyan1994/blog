@@ -12,6 +12,7 @@ use App\Projects;
 use App\Tasks;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Constraint\Count;
 
 class TaskController
@@ -34,8 +35,7 @@ class TaskController
 
     public function edit()
     {
-
-        $id = request()->id;
+        $id = request()->get('id');
         $taskObj = Tasks::findOrFail($id);
         return $taskObj;}
 

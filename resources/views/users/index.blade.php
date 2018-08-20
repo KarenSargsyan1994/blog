@@ -16,34 +16,34 @@
             <div class="form-group m-0">
                 <div class="input-group">
                     <div class="col-3 p-0 mr-2">
-                        <input type="text" class="form-control" name="search"
-                               value="{{$searchArr['search']}}"></div>
+                        <input type="text" class="form-control" name="searchName"
+                               value="{{request()->get('searchName')}}"></div>
 
 
                     <select name="select" class="btn btn-info col-2 mr-2" value="">
-                        <option value="name" {{$searchArr['select']=='name'?'selected':''}}> name</option>
-                        <option value="email"{{$searchArr['select']=='email'?'selected':''}}>email</option>
+                        <option value="name" {{request()->get('select')=='name'?'selected':''}}> name</option>
+                        <option value="email"{{request()->get('select')=='email'?'selected':''}}>email</option>
                     </select>
                     <div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
                         <label class="btn btn-dark active">
 
-                            <input type="radio" name="sort" id="asc" value="asc"
-                                   autocomplete="off" {{$searchArr['sort'] == 'asc' ? 'checked' : ''}}> ASC
+                            <input type="radio" name="sortBy" id="asc" value="asc"
+                                   autocomplete="off" {{request()->get('sortBy') == 'asc' ? 'checked' : ''}}> ASC
                         </label>
                         <label class="btn btn-danger">
-                            <input type="radio" name="sort" id="desc" value="desc"
-                                   autocomplete="off" {{$searchArr['sort'] == 'desc' ? 'checked' : ''}}> DESC
+                            <input type="radio" name="sortBy" id="desc" value="desc"
+                                   autocomplete="off" {{request()->get('sortBy')  == 'desc' ? 'checked' : ''}}> DESC
                         </label>
                     </div>
 
                     <span class=" col-1 btn-success  btn-group-vertical p-0"> <p class="m-auto">More than</p></span>
                     <div class="col-1 p-0 ">
-                        <input type="text" class="form-control" id="moreThan" name="moreThan" value="{{$searchArr['moreThan']}}">
+                        <input type="text" class="form-control" id="moreThan" name="more_Than" value="{{request()->get('more_Than')}}">
                     </div>
                     <span class=" col-1 btn-success  btn-group-vertical text-md-center p-0"><p
                                 class="m-auto">Less than</p></span>
                     <div class="col-1 p-0 mr-2">
-                        <input type="text" class="form-control" id="lessThan" name="lessThan" value="{{$searchArr['lessThan']}}">
+                        <input type="text" class="form-control" id="lessThan" name="less_Than" value="{{request()->get('less_Than')}}">
                     </div>
 
                     <button type="submit" id="bt" class="btn btn-primary col-1">Search</button>
@@ -89,8 +89,7 @@
                 <td>
                     <button type="button" data-userid="{{$userObj->id}}"
                             class="btn btn-warning" data-toggle="modal"
-                            data-target="#edit"
-                    >Edit
+                            data-target="#edit">Edit
                     </button>
 
 
@@ -189,13 +188,13 @@
 
             $('#ajaxSubmit').on('click', function (e) {
                 e.preventDefault();
-                var formData = $('form.content').serialize();
+                var formObj = $('form.content').serialize();
 
 
                 $.ajax({
                     type: 'post',
                     url: 'user/update',
-                    data: formData,
+                    data: formObj,
                     success: function (data) {
                         if ($.isEmptyObject(data.errors)) {
                             location.reload();

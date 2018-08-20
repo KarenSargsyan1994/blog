@@ -77,7 +77,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button class="btn btn-success" id="taskSubm">Save changes</button>
+                            <button class="btn btn-success" id="taskSubmit">Save changes</button>
                         </div>
 
                     </form>
@@ -93,11 +93,13 @@
             $('#editTask').on('shown.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
                 var taskId = button.data('taskid');
+
                 $.ajax({
                     type: 'get',
                     url: '/task/edit',
                     data: {id: taskId},
                     success: function (data) {
+
                         $('.modal-body #name').val(data['name']);
                         $('.modal-body #des').val(data['description']);
                         $('.modal-body #task_id').val(data['id']);
@@ -107,7 +109,7 @@
 
             });
 
-            $('#taskSubm').on('click', function (e) {
+            $('#taskSubmit').on('click', function (e) {
                 e.preventDefault();
                 $.ajax({
                     type: 'post',

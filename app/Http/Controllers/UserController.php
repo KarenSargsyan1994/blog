@@ -24,49 +24,27 @@ class UserController
     {
 
         $validator = \Validator::make(request()->all(), [
-            'moreThan' => 'required|regex:/^[0-9]+$/',
-            'lessThan' => 'required|regex:/^[0-9]+$/'
+            'more_Than' => 'required|regex:/^[0-9]+$/',
+            'less_Than' => 'required|regex:/^[0-9]+$/'
         ]);
-        if ($validator->fails()) {
-            $errors_list = $validator->errors()->messages();
-            if (!empty($errors_list['moreThan']) && !empty($errors_list['lessThan'])) {
-                $moreThan = -1;
-                $lessThan = 10;
-            } elseif (!empty($errors_list['moreThan'])) {
-                $moreThan = 1;
-                $lessThan = request()->lessThan;
-
-            } else {
-                $moreThan = 10;
-                $lessThan = request()->moreThan;
-            }
-
-        } else {
-            $lessThan = request()->lessThan;
-            $moreThan = request()->moreThan;
-        }
-
-        if (request()->select == null) {
-            $selectName = 'name';
-        } else {
-            $selectName = request()->select;
-        }
-
-        $searchName = request()->search;
-        $sort = request()->sort;
-        $searchArr = array('search' => $searchName, 'sort' => $sort, 'lessThan' => $lessThan, 'moreThan' => $moreThan, 'select' => $selectName);
 
         $query = User::with('projects')
-            ->with('tasks')->where('users.name', 'LIKE', '%' . $searchName . '%')
-            ->orWhere('users.email', 'LIKE', '%' . $searchName . '%')
-            ->groupBy('users.id')->withCount('projects')
-            ->having('projects_count', '>', $moreThan)
-            ->having('projects_count', '<', $lessThan)
-            ->orderBy($selectName, $sort)->get();
-        $userArr = $this->paginate($query)->setPath('http://blog-test.loc/index');
+            ->with('tasks')->where('users.name', 'LIKE', '%' . request()->get('searchName') . '%')
+            ->orWhere('users.email', 'LIKE', '%' . request()->get('searchName') . '%')
+            ->groupBy('users.id')->withCount('projects');
+
+        if (request()->filled('more_Than')) {
+            $query->having('projects_count', '>', request()->get('more_Than'));
+        }
+        if (request()->filled('less_Than')) {
+            $query->having('projects_count', '<', request()->get('less_Than'));
+        }
+        $query=$query->orderBy(request()->input('select', 'name'), request()->get('sortBy'))->get();
+        $userArr = $this->paginate($query);
 
         return view('users.index', [
-            'userArr' => $userArr, 'searchArr' => $searchArr,
+            'userArr' => $userArr,
+
         ]);
 
 
@@ -90,9 +68,10 @@ class UserController
 
     public function edit()
     {
-        $id = $_GET['id'];
-        $userDate = User::findOrFail($id);
-        return $userDate;
+        $id = request()->get('id');
+
+        $userObj = User::findOrFail($id);
+        return $userObj;
 
     }
 

@@ -32,7 +32,7 @@ Route::resource('projects', 'ProjectController');
 Route::resource('tasks', 'TaskController');
 
 Route::get('projects/{id}/projects', 'ProjectController@projects');
-Route::get('task/{id}', 'TaskController@projectTasks');
+Route::get('task/{id}/task', 'TaskController@projectTasks');
 Route::get('users/{id}/task', 'TaskController@userTasks');
 
 Route::post('/user/update', 'UserController@update');

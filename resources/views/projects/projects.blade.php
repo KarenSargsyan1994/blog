@@ -34,7 +34,7 @@
                 <td>
                     <button type="button" data-projectid="{{$projectObj->id}}"
                             class="btn btn-warning " data-toggle="modal"
-                            data-target="#editProj">Edit
+                            data-target="#editProject">Edit
                     </button>
                 </td>
 
@@ -50,7 +50,7 @@
 
 
 
-    <div class="modal" id="editProj">
+    <div class="modal" id="editProject">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <form class="projForm">
+                    <form class="projectForm">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                         <input type="hidden" name="project_id" id="project_id" value="">
@@ -82,7 +82,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button class="btn btn-success" id="projSubm">Save changes</button>
+                            <button class="btn btn-success" id="projectSubmit">Save changes</button>
                         </div>
 
                     </form>
@@ -95,7 +95,7 @@
 
     <script>
         $(document).ready(function () {
-            $('#editProj').on('shown.bs.modal', function (event) {
+            $('#editProject').on('shown.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
                 var projectId = button.data('projectid');
                 $.ajax({
@@ -113,12 +113,12 @@
 
             });
 
-            $('#projSubm').on('click', function (e) {
+            $('#projectSubmit').on('click', function (e) {
                 e.preventDefault();
                 $.ajax({
                     type: 'post',
                     url: '/project/update',
-                    data: $('form.projForm').serialize(),
+                    data: $('form.projectForm').serialize(),
 
                     success: function (data) {
                         if ($.isEmptyObject(data.errors)) {
