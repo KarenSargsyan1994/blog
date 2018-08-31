@@ -18,6 +18,13 @@ use PHPUnit\Framework\Constraint\Count;
 class ProjectController
 {
 
+
+    public function index() {
+        $project=Projects::all();
+
+        return response()->json($project);
+    }
+
     public function projects($id)
     {
         $projectArr = Projects::where('projects.user_id', '=', $id)->with('tasks')->paginate(5);

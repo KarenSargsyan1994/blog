@@ -22,21 +22,21 @@ Route::get('/', function () {
 Route::post('post', 'UserController@update');
 Route::get('/index', 'UserController@index');
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('dashboard', function () {
-    return redirect('index');
-});
+Route::get('/home', 'HomeController@index');
+//
+//Route::get('dashboard', function () {
+//    return redirect('index');
+//});
 Route::resource('users', 'UserController');
 Route::resource('projects', 'ProjectController');
 Route::resource('tasks', 'TaskController');
-
+Route::get('destroy/{id}','UserController@destroy');
 Route::get('projects/{id}/projects', 'ProjectController@projects');
 Route::get('task/{id}/task', 'TaskController@projectTasks');
 Route::get('users/{id}/task', 'TaskController@userTasks');
 
 Route::post('/user/update', 'UserController@update');
-Route::get('/user/edit', 'UserController@edit');
+Route::get('/user/edit/{id}', 'UserController@edit');
 
 Route::post('/project/update', 'ProjectController@update');
 Route::get('/project/edit', 'ProjectController@edit');

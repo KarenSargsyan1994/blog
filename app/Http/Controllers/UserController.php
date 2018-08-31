@@ -21,34 +21,54 @@ class UserController
 {
 
     public function index()
+
     {
-
-        $validator = \Validator::make(request()->all(), [
-            'more_Than' => 'required|regex:/^[0-9]+$/',
-            'less_Than' => 'required|regex:/^[0-9]+$/'
-        ]);
-
-        $query = User::with('projects')
-            ->with('tasks')->where('users.name', 'LIKE', '%' . request()->get('searchName') . '%')
+        $query=User::with('projects')->with('tasks')
+            ->where('users.name','LIKE','%'.request()->get("searchName").'%')
             ->orWhere('users.email', 'LIKE', '%' . request()->get('searchName') . '%')
-            ->groupBy('users.id')->withCount('projects');
+            ->withCount('projects');
 
-        if (request()->filled('more_Than')) {
-            $query->having('projects_count', '>', request()->get('more_Than'));
+        if (request()->filled('more_than')) {
+            $query->having('projects_count', '>', request()->get('more_than'));
         }
-        if (request()->filled('less_Than')) {
-            $query->having('projects_count', '<', request()->get('less_Than'));
+        if (request()->filled('less_than')) {
+        $query->having('projects_count', '<', request()->get('less_than'));
         }
-        $query=$query->orderBy(request()->input('select', 'name'), request()->get('sortBy'))->get();
-        $userArr = $this->paginate($query);
-
-        return view('users.index', [
-            'userArr' => $userArr,
-
-        ]);
 
 
-    }
+           $userArr =$query->orderBy(request()->input('select','name'), request()->get('sort'))
+            ->get();
+
+//       $userArr=$this->paginate($query)->setPath('http://blog-test.loc/api/custom');
+
+        return  $userArr;
+}
+
+
+//
+//         $validator = \Validator::make(request()->all(), [
+//            'more_Than' => 'required|regex:/^[0-9]+$/',
+//            'less_Than' => 'required|regex:/^[0-9]+$/'
+//        ]);
+//
+//        $query = User::with('projects')
+//            ->with('tasks')->where('users.name', 'LIKE', '%' . request()->get('searchName') . '%')
+//            ->orWhere('users.email', 'LIKE', '%' . request()->get('searchName') . '%')
+//            ->groupBy('users.id')->withCount('projects');
+//
+//        if (request()->filled('more_Than')) {
+//            $query->having('projects_count', '>', request()->get('more_Than'));
+//        }
+//        if (request()->filled('less_Than')) {
+//            $query->having('projects_count', '<', request()->get('less_Than'));
+//        }
+//        $query=$query->orderBy(request()->input('select', 'name'), request()->get('sortBy'))->get();
+//
+//
+//
+//        return response()->json($query);
+
+
 
     protected function create()
     {
@@ -66,18 +86,17 @@ class UserController
         return back()->with('success', 'users  added');
     }
 
-    public function edit()
+    public function edit($id)
     {
-        $id = request()->get('id');
 
         $userObj = User::findOrFail($id);
-        return $userObj;
+        return $userObj->only(['id','name','email']);
 
     }
 
     public function update(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $validator = \Validator::make($request->data, [
             'name' => 'required',
             'email' => 'required|email|regex:/(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$)/u',
         ]);
@@ -85,22 +104,20 @@ class UserController
             return response()->json(['errors' => $validator->errors()]);
         } else {
 
-            User::findOrFail($request->user_id)->update($request->all());
-            return response()->json(['success' => 'User is successfully updated']);
+            User::findOrFail($request->data['id'])->update($request->data);
+            return response()->json(" users success update");
         }
-
-
     }
 
     public function destroy($id)
     {
         $userObj = User::findOrFail($id);
         $userObj->delete();
-        return redirect('users')->with('success', 'User has been  deleted');
+        return response()->json('User has been  deleted');
     }
 
 
-    protected function paginate($items, $perPage = 7)
+    protected function paginate($items, $perPage =5)
     {
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentPageItems = $items->slice(($currentPage - 1) * $perPage, $perPage);
